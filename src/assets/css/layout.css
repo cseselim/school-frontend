@@ -1,0 +1,71 @@
+.sitebar_area{
+    background-color: #1E1E2D;
+    height: 100vh;    
+}
+.layout .container-fluid{
+    padding-left: 0px;
+}
+.layout a svg{
+    margin-right: 10px;
+}
+.logo a {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 18px 0px;
+    display: block;
+}
+.logo a:hover{
+    color: #fff;
+    text-decoration: none !important;
+}
+.sitebar_area{
+    padding-left: 20px;
+}
+.dashboard{
+    margin: 18px 0px;
+}
+.dashboard a{
+    padding: 9px 18px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 16px;
+    text-transform: initial;
+    transition: 0.5s;
+}
+.dashboard a:hover{
+    color: #a2a3b7;
+}
+.side_bar_menu li{
+    padding: 10px 0px;
+}
+.side_bar_menu li a{
+    font-size: 13px;
+    font-weight: 300;
+    font-family: Poppins;
+    color: #a2a3b7;
+    text-decoration: none;
+    transition: 0.5s;
+}
+.side_bar_menu li a:hover{
+    color: #fff;
+}
+.header_area{
+    font-size: 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0px;
+    margin-bottom: 18px;
+}
+.dashboard_content_area{
+    height: 80vh;
+}
+.footer_area{
+    font-size: 18px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding: 10px 0px;
+}
