@@ -1,4 +1,5 @@
 import React from "react";
+import {GetRequests} from "../services/axiosClient";
 
 function Home(){
     return(

@@ -3,7 +3,7 @@ import {Route,Switch} from "react-router-dom"
 import Home from "../Components/Home";
 import Question from "../Components/Question";
 import Quiz from "../Components/Quiz";
-
+import versionList from "../Components/version/versionListComponents";
 class AllRroutes extends Component {
     render() {
         return (
@@ -12,6 +12,7 @@ class AllRroutes extends Component {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/question" component={Question}/>
                     <Route exact path="/quiz" component={Quiz}/>
+                    <Route exact path="/version-list" component={versionList}/>
                 </Switch>
             </Fragment>
         );
