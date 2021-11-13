@@ -1,0 +1,40 @@
+.react-bootstrap-table table thead{
+    background-color: #221e2e;
+}
+.react-bootstrap-table table thead tr th{
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+.react-bootstrap-table table tbody tr:nth-child(odd){
+    background-color: #ddd;
+}
+.react-bootstrap-table table tbody tr td{
+    font-size: 14px;
+    padding: 5px 9px;
+}
+.table_search{
+    float: right;
+    margin-bottom: 5px;
+}
+.table_search .form-control{
+    padding: 3px 9px;
+}
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+/* .page-item:first-child .page-link {
+    border-radius: 0;
+}
+.page-item:last-child .page-link {
+    border-radius: 0;
+} */
+.react-bootstrap-table-pagination .page-link {
+    padding: 3px 16px;
+}
+.react-bootstrap-table-pagination .btn{
+    padding: 3px 15px;
+}

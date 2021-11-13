@@ -1,15 +1,10 @@
 import React from "react";
-import {Button,Row,Col} from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faList } from '@fortawesome/free-solid-svg-icons'
-import GetRequests from "../../services/axiosClient";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import '../../assets/css/widget/datatable.css';
-function versionList(){
+function datatable(){
     const products = [
         {
         id: 1,
@@ -77,25 +72,11 @@ function versionList(){
         }, {
         dataField: 'price',
         text: 'Product Price'
-        },
+        }
     ];
     const { SearchBar } = Search;
     return(
         <div>
-            <div className="content_header">
-                <Row className="Row">
-                    <Col xs={6} md={6} className="my-auto">
-                        <div className="page_title">
-                            <h1><FontAwesomeIcon icon={faList}/>Version List</h1>
-                        </div>
-                    </Col>
-                    <Col xs={6} md={6} className="text-right">
-                        <div className="page_action_btn">
-                            <a href="#"><Button variant="success">Add New</Button></a>
-                        </div>
-                    </Col>
-                </Row>
-            </div>
             <ToolkitProvider
                 keyField="id"
                 data={ products }
@@ -105,9 +86,9 @@ function versionList(){
                 {
                     props => (
                     <div>
-                        <div className="table_search">
-                            <SearchBar { ...props.searchProps } />
-                        </div>
+                        <h3>Input something at below input field:</h3>
+                        <SearchBar { ...props.searchProps } />
+                        <hr />
                         <BootstrapTable
                         { ...props.baseProps } pagination = {paginationFactory()}
                         />
@@ -119,4 +100,4 @@ function versionList(){
     );
 }
 
-export default versionList;
+export default datatable;

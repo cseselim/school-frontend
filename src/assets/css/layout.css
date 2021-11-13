@@ -1,6 +1,7 @@
 .sitebar_area{
     background-color: #1E1E2D;
-    height: 100vh;    
+    max-height: 100vh;
+    min-height: 100%;    
 }
 .layout .container-fluid{
     padding-left: 0px;
@@ -61,7 +62,26 @@
     margin-bottom: 18px;
 }
 .dashboard_content_area{
-    height: 80vh;
+    min-height: 100vh;
+    max-height: 100%;
+}
+.content_header{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+.page_action_btn{
+    float: right;
+}
+.page_title h1{
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0px;
+}
+.page_title h1 svg{
+    font-size: 16px;
+    margin-right: 8px;
+    color: #0baf62;
 }
 .footer_area{
     font-size: 18px;
