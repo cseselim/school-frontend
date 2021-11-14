@@ -1,16 +1,19 @@
 import React from "react";
-import reactDom from "react-dom";
 import Layout from "./Layout/layout";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter,Route,Switch } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import AllRroutes from "./router/AllRroutes";
-import Home from "./Components/Home";
+import store from './app/store';
+import { Provider } from 'react-redux';
+
 function App() {
   return (
     <BrowserRouter>
-    <Layout>
-      <AllRroutes/>
-    </Layout>
+      <Provider store={store}>
+        <Layout>
+          <AllRroutes/>
+        </Layout>
+      </Provider> 
     </BrowserRouter>
   );
 }

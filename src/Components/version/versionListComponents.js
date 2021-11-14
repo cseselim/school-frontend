@@ -1,7 +1,7 @@
 import React from "react";
 import {Button,Row,Col} from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faList } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
 import GetRequests from "../../services/axiosClient";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
@@ -9,7 +9,12 @@ import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import '../../assets/css/widget/datatable.css';
-function versionList(){
+import { useSelector, useDispatch } from 'react-redux';
+import version from '../../state/version/versionSlice';
+
+function VersionList(){
+    const count = useSelector((state) => state.version.abc);
+     const dispatch = useDispatch();
     const products = [
         {
         id: 1,
@@ -119,4 +124,4 @@ function versionList(){
     );
 }
 
-export default versionList;
+export default VersionList;
