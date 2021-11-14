@@ -77,7 +77,6 @@ function VersionList(){
     const columns = [{
         dataField: 'id',
         text: 'Product ID',
-        sort: true
         }, {
         dataField: 'name',
         text: 'Product Name'
@@ -105,12 +104,12 @@ function VersionList(){
                     </Col>
                     <Col xs={6} md={6} className="text-right">
                         <div className="page_action_btn">
-                            <a href="#"><Button onClick={handleShow} variant="success">Add New</Button></a>
+                            <Button onClick={handleShow} variant="success">Add New</Button>
                         </div>
                     </Col>
                 </Row>
             </div>
-            <Versionlisttable></Versionlisttable>
+            <Versionlisttable products="products" columns="columns"></Versionlisttable>
             {/* <ToolkitProvider
                 keyField="id"
                 data={ products }
