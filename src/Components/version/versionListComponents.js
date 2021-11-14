@@ -2,14 +2,10 @@ import React,{useState} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { Formik,Field,useFormik,ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
-// import GetRequests from "../../services/axiosClient";
-// import BootstrapTable from 'react-bootstrap-table-next';
-// import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
-// import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
-// import paginationFactory from 'react-bootstrap-table2-paginator';
-// import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-// import '../../assets/css/widget/datatable.css';
+import TextField from '../../widget/form/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import version from '../../state/version/versionSlice';
 
@@ -93,6 +89,27 @@ function VersionList(){
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+
+    const validate = values => {
+        const errors = {};
+        if (!values.version) {
+          errors.version = 'Version is required';
+        } else if (values.version.length > 15) {
+          errors.version = 'Must be 15 characters or less';
+        }
+        return errors;
+      };
+
+    const formik = useFormik({
+        initialValues: {
+            version: '',
+        },
+        validate,
+        onSubmit: values => {
+          alert(JSON.stringify(values, null, 2));
+        },
+      });
+
     return(
         <div>
             <div className="content_header">
@@ -109,46 +126,31 @@ function VersionList(){
                     </Col>
                 </Row>
             </div>
-            <Versionlisttable products="products" columns="columns"></Versionlisttable>
-            {/* <ToolkitProvider
-                keyField="id"
-                data={ products }
-                columns={ columns }
-                search
-                >
-                {
-                    props => (
-                    <div>
-                        <div className="table_search">
-                            <SearchBar { ...props.searchProps } />
-                        </div>
-                        <BootstrapTable
-                        { ...props.baseProps } pagination = {paginationFactory()}
-                        />
-                    </div>
-                    )
-                }
-            </ToolkitProvider> */}
 
+            <Versionlisttable products={products} columns={columns}></Versionlisttable>
+            
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Version/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Version:</Form.Label>
-                        <Form.Control type="text" placeholder="Enter version" />
-                    </Form.Group>
+                <form onSubmit={formik.handleSubmit}>
+                    <label className="form-label" htmlFor="version">Version:</label>
+                    <input
+                        className="form-control"
+                        id="version"
+                        name="version"
+                        type="text"
+                        placeholder="Enter version"
+                        onChange={formik.handleChange}
+                        value={formik.values.version}
+                    />
+                    {formik.errors.version ? <div className="form_error">{formik.errors.version}</div> : null}
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button type="submit" variant="primary" onClick={handleClose}>
-                            Save
-                        </Button>
+                        <Button onClick={handleClose} variant="secondary">Close</Button>
+                        <Button type="submit" variant="primary">Save</Button>
                     </Modal.Footer>
-                </Form>
+                    </form>
                 </Modal.Body>
             </Modal>
         </div>

@@ -89,3 +89,10 @@
     border-top: 1px solid #ddd;
     padding: 10px 0px;
 }
+.form_error{
+    font-size: 14px;
+    color: red;
+}
+.modal-footer{
+    margin-top: 28px;
+}
