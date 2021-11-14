@@ -2,13 +2,14 @@ import React,{useState} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import GetRequests from "../../services/axiosClient";
-import BootstrapTable from 'react-bootstrap-table-next';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import '../../assets/css/widget/datatable.css';
+import Versionlisttable from '../../widget/datatble';
+// import GetRequests from "../../services/axiosClient";
+// import BootstrapTable from 'react-bootstrap-table-next';
+// import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
+// import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+// import paginationFactory from 'react-bootstrap-table2-paginator';
+// import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+// import '../../assets/css/widget/datatable.css';
 import { useSelector, useDispatch } from 'react-redux';
 import version from '../../state/version/versionSlice';
 
@@ -72,6 +73,7 @@ function VersionList(){
             'price': 2011
         },
     ];
+
     const columns = [{
         dataField: 'id',
         text: 'Product ID',
@@ -84,12 +86,13 @@ function VersionList(){
         text: 'Product Price'
         },
     ];
-    const { SearchBar } = Search;
+
+    // const { SearchBar } = Search;
 
     const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     return(
         <div>
@@ -107,7 +110,8 @@ function VersionList(){
                     </Col>
                 </Row>
             </div>
-            <ToolkitProvider
+            <Versionlisttable></Versionlisttable>
+            {/* <ToolkitProvider
                 keyField="id"
                 data={ products }
                 columns={ columns }
@@ -125,7 +129,7 @@ function VersionList(){
                     </div>
                     )
                 }
-            </ToolkitProvider>
+            </ToolkitProvider> */}
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>

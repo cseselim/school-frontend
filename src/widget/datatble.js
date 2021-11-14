@@ -4,7 +4,8 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-function datatable(){
+import '../assets/css/widget/datatable.css';
+function Datatable(){
     const products = [
         {
         id: 1,
@@ -86,9 +87,9 @@ function datatable(){
                 {
                     props => (
                     <div>
-                        <h3>Input something at below input field:</h3>
-                        <SearchBar { ...props.searchProps } />
-                        <hr />
+                        <div className="table_search">
+                            <SearchBar { ...props.searchProps } />
+                        </div>
                         <BootstrapTable
                         { ...props.baseProps } pagination = {paginationFactory()}
                         />
@@ -100,4 +101,4 @@ function datatable(){
     );
 }
 
-export default datatable;
+export default Datatable;
