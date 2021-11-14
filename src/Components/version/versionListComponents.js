@@ -1,5 +1,5 @@
-import React from "react";
-import {Button,Row,Col} from "react-bootstrap";
+import React,{useState} from "react";
+import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import GetRequests from "../../services/axiosClient";
@@ -85,6 +85,12 @@ function VersionList(){
         },
     ];
     const { SearchBar } = Search;
+
+    const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
     return(
         <div>
             <div className="content_header">
@@ -96,7 +102,7 @@ function VersionList(){
                     </Col>
                     <Col xs={6} md={6} className="text-right">
                         <div className="page_action_btn">
-                            <a href="#"><Button variant="success">Add New</Button></a>
+                            <a href="#"><Button onClick={handleShow} variant="success">Add New</Button></a>
                         </div>
                     </Col>
                 </Row>
@@ -120,6 +126,28 @@ function VersionList(){
                     )
                 }
             </ToolkitProvider>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Version/Add or Edit</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>Version:</Form.Label>
+                        <Form.Control type="text" placeholder="Enter version" />
+                    </Form.Group>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button type="submit" variant="primary" onClick={handleClose}>
+                            Save
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }
