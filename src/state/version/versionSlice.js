@@ -1,21 +1,45 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
+import TutorialDataService from "../../services/version/versionService";
+
+
+export const createTutorial = createAsyncThunk(
+  "tutorials/create",
+  async ({ title, description }) => {
+    const res = await TutorialDataService.create({ title, description });
+    return res.data;
+  }
+);
+
+export const retrieveTutorials = createAsyncThunk(
+  "tutorials/retrieve",
+  async () => {
+    const res = await TutorialDataService.getAll();
+    return res.data;
+  }
+);
+
+export const updateTutorial = createAsyncThunk(
+  "tutorials/update",
+  async ({ id, data }) => {
+    const res = await TutorialDataService.update(id, data);
+    return res.data;
+  }
+);
+
+export const deleteTutorial = createAsyncThunk(
+  "tutorials/delete",
+  async ({ id }) => {
+    await TutorialDataService.remove(id);
+    return { id };
+  }
+);
 
 export const versionSlice = createSlice({
   name: 'version',
-  initialState: {
-    value: 0,
-    abc:{
-        a:'15',
-        b:'16',
-        c:'17',
-        d:'18',
-        e:'19',
-    }
-  },
+  initialState: {},
+  
   reducers: {
-    increment: (state) => {
-        state.value = 50;
-      },
+    
   },
 });
 
