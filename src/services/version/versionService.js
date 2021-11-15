@@ -1,7 +1,7 @@
 import http from "../AppUrl";
 
 const getAll = () => {
-  return http.get("/tutorials");
+  return http.get("/version");
 };
 
 const get = id => {

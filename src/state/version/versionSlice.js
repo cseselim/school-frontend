@@ -1,7 +1,7 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import TutorialDataService from "../../services/version/versionService";
 
-
+const initialState=[];
 export const createTutorial = createAsyncThunk(
   "tutorials/create",
   async ({ title, description }) => {
@@ -36,10 +36,11 @@ export const deleteTutorial = createAsyncThunk(
 
 export const versionSlice = createSlice({
   name: 'version',
-  initialState: {},
-  
-  reducers: {
-    
+  initialState,
+  extraReducers: {
+    [retrieveTutorials.fulfilled]: (state, action) => {
+      state.push(action.payload);
+    },
   },
 });
 

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect,useCallback} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +7,27 @@ import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import TextField from '../../widget/form/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import version from '../../state/version/versionSlice';
+import {createTutorial,retrieveTutorials,updateTutorial} from '../../state/version/versionSlice';
+import versionService from '../../services/version/versionService';
 
 function VersionList(){
-    const count = useSelector((state) => state.version.abc);
-     const dispatch = useDispatch();
+    const count = useSelector((state) => state.version);
+    const dispatch = useDispatch();
+
+    const initFetch = useCallback(() => {
+        dispatch(retrieveTutorials());
+      }, [dispatch])
+    
+      useEffect(() => {
+        initFetch();
+      }, [initFetch])
+
+      console.log(count);
+
+    // useEffect(() => {
+    //     console.log(versionService.getAll());
+    // });
+
     const products = [
         {
         id: 1,
