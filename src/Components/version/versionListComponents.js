@@ -14,9 +14,9 @@ function VersionList(){
     const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
 
-    //   const initFetch = useCallback(() => {
-    //     dispatch(getAllVersion());
-    //   }, [dispatch])
+    useEffect(() => {
+        dispatch(getAllVersion());
+    }, [])
 
       const products = versionList[0];
       console.log(products);
@@ -103,10 +103,6 @@ function VersionList(){
         },
     ];
 
-    useEffect(() => {
-        dispatch(getAllVersion());
-      }, [])
-
     // const { SearchBar } = Search;
 
     const [show, setShow] = useState(false);
@@ -151,9 +147,11 @@ function VersionList(){
                     </Col>
                 </Row>
             </div>
-
-            <Versionlisttable data={products} columns={columns}></Versionlisttable>
-            
+            {products ? (
+                <Versionlisttable data={products} columns={columns}></Versionlisttable>
+              ) : (
+                <h1>Data is not available</h1>
+              )}
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Version/Add or Edit</Modal.Title>
