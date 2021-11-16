@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useCallback} from "react";
+import React,{useState,useEffect,useCallback, version} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
@@ -7,96 +7,105 @@ import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import TextField from '../../widget/form/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import {createTutorial,retrieveTutorials,updateTutorial} from '../../state/version/versionSlice';
+import {getAllVersion} from '../../state/version/versionSlice';
 import versionService from '../../services/version/versionService';
 
 function VersionList(){
-    const count = useSelector((state) => state.version);
+    const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
 
-    const initFetch = useCallback(() => {
-        dispatch(retrieveTutorials());
-      }, [dispatch])
-    
-      useEffect(() => {
-        initFetch();
-      }, [initFetch])
+    //   const initFetch = useCallback(() => {
+    //     dispatch(getAllVersion());
+    //   }, [dispatch])
 
-      console.log(count);
+      const products = versionList[0];
+      console.log(products);
 
-    // useEffect(() => {
-    //     console.log(versionService.getAll());
-    // });
-
-    const products = [
-        {
-        id: 1,
-        name: 'TV',
-        'price': 1000
-        },
-        {
-        id: 2,
-        name: 'Mobile',
-        'price': 500
-        },
-        {
-        id: 3,
-        name: 'Book',
-        'price': 20
-        },
-        {
-            id: 4,
-            name: 'Book 4',
-            'price': 204
-        },
-        {
-            id: 5,
-            name: 'Book 5',
-            'price': 205
-        },
-        {
-            id: 6,
-            name: 'Book 6',
-            'price': 206
-        },
-        {
-            id: 7,
-            name: 'Book 7',
-            'price': 207
-        },
-        {
-            id: 8,
-            name: 'Book 8',
-            'price': 208
-        },
-        {
-            id: 9,
-            name: 'Book 9',
-            'price': 209
-        },
-        {
-            id: 10,
-            name: 'Book 10',
-            'price': 2010
-        },
-        {
-            id: 11,
-            name: 'Book 11',
-            'price': 2011
-        },
-    ];
+    // const products = [
+    //     {
+    //     id: 1,
+    //     name: 'TV',
+    //     'price': 1000
+    //     },
+    //     {
+    //     id: 2,
+    //     name: 'Mobile',
+    //     'price': 500
+    //     },
+    //     {
+    //     id: 3,
+    //     name: 'Book',
+    //     'price': 20
+    //     },
+    //     {
+    //         id: 4,
+    //         name: 'Book 4',
+    //         'price': 204
+    //     },
+    //     {
+    //         id: 5,
+    //         name: 'Book 5',
+    //         'price': 205
+    //     },
+    //     {
+    //         id: 6,
+    //         name: 'Book 6',
+    //         'price': 206
+    //     },
+    //     {
+    //         id: 7,
+    //         name: 'Book 7',
+    //         'price': 207
+    //     },
+    //     {
+    //         id: 8,
+    //         name: 'Book 8',
+    //         'price': 208
+    //     },
+    //     {
+    //         id: 9,
+    //         name: 'Book 9',
+    //         'price': 209
+    //     },
+    //     {
+    //         id: 10,
+    //         name: 'Book 10',
+    //         'price': 2010
+    //     },
+    //     {
+    //         id: 11,
+    //         name: 'Book 11',
+    //         'price': 2011
+    //     },
+    // ];
+    // //console.log(products);
+    // const columns = [{
+    //     dataField: 'id',
+    //     text: 'Product ID',
+    //     }, {
+    //     dataField: 'name',
+    //     text: 'Product Name'
+    //     }, {
+    //     dataField: 'code',
+    //     text: 'Product Price'
+    //     },
+    // ];
 
     const columns = [{
         dataField: 'id',
-        text: 'Product ID',
+        text: 'ID',
         }, {
         dataField: 'name',
-        text: 'Product Name'
+        text: 'Version Name'
         }, {
-        dataField: 'price',
-        text: 'Product Price'
+        dataField: 'code',
+        text: 'Code'
         },
     ];
+
+    useEffect(() => {
+        dispatch(getAllVersion());
+      }, [])
 
     // const { SearchBar } = Search;
 
@@ -143,7 +152,7 @@ function VersionList(){
                 </Row>
             </div>
 
-            <Versionlisttable products={products} columns={columns}></Versionlisttable>
+            <Versionlisttable data={products} columns={columns}></Versionlisttable>
             
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>

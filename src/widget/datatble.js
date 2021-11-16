@@ -6,12 +6,13 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import '../assets/css/widget/datatable.css';
 function Datatable(props){
+    console.log(props);
     const { SearchBar } = Search;
     return(
         <div>
             <ToolkitProvider
                 keyField="id"
-                data={ props.products }
+                data={ props.data }
                 columns={ props.columns }
                 search
                 >

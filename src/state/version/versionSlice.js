@@ -1,7 +1,9 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import TutorialDataService from "../../services/version/versionService";
 
-const initialState=[];
+const initialState={
+  value: [],
+};
 export const createTutorial = createAsyncThunk(
   "tutorials/create",
   async ({ title, description }) => {
@@ -10,8 +12,8 @@ export const createTutorial = createAsyncThunk(
   }
 );
 
-export const retrieveTutorials = createAsyncThunk(
-  "tutorials/retrieve",
+export const getAllVersion = createAsyncThunk(
+  "version/get",
   async () => {
     const res = await TutorialDataService.getAll();
     return res.data;
@@ -37,14 +39,15 @@ export const deleteTutorial = createAsyncThunk(
 export const versionSlice = createSlice({
   name: 'version',
   initialState,
+  reducers:{},
   extraReducers: {
-    [retrieveTutorials.fulfilled]: (state, action) => {
-      state.push(action.payload);
+    [getAllVersion.fulfilled]: (state, action) => {
+      state.value.push(action.payload.data);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment } = versionSlice.actions;
+//export const { retrieveTutorials } = versionSlice.actions;
 
 export default versionSlice.reducer;

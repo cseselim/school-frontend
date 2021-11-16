@@ -5,27 +5,15 @@ const getAll = () => {
 };
 
 const get = id => {
-  return http.get(`/tutorials/${id}`);
+  return http.get(`/version/${id}`);
 };
 
 const create = data => {
-  return http.post("/tutorials", data);
+  return http.post("/version", data);
 };
 
 const update = (id, data) => {
-  return http.put(`/tutorials/${id}`, data);
-};
-
-const remove = id => {
-  return http.delete(`/tutorials/${id}`);
-};
-
-const removeAll = () => {
-  return http.delete(`/tutorials`);
-};
-
-const findByTitle = title => {
-  return http.get(`/tutorials?title=${title}`);
+  return http.put(`/version/${id}`, data);
 };
 
 const VersionService = {
@@ -33,9 +21,6 @@ const VersionService = {
   get,
   create,
   update,
-  remove,
-  removeAll,
-  findByTitle
 };
 
 export default VersionService;
