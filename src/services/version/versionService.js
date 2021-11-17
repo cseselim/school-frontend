@@ -9,6 +9,7 @@ const get = id => {
 };
 
 const create = data => {
+  //alert(data);
   return http.post("/version", data);
 };
 

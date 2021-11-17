@@ -6,7 +6,7 @@ import { Formik,Field,useFormik,ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion, deleteVersion} from '../../state/version/versionSlice';
+import {getAllVersion, deleteVersion, createVersion} from '../../state/version/versionSlice';
 import versionService from '../../services/version/versionService';
 
 function VersionList(){
@@ -65,25 +65,30 @@ function VersionList(){
     const handleShow = () => setShow(true);
 
 
+
     const validate = values => {
         const errors = {};
-        if (!values.version) {
-          errors.version = 'Version is required';
-        } else if (values.version.length > 15) {
-          errors.version = 'Must be 15 characters or less';
+        if (!values.name) {
+        errors.name = 'Version is required';
+        }
+        if (!values.code) {
+            errors.code = 'Code is required';
+        } else if (values.code.length < 4 ) {
+            errors.code = 'Code Must be 4 number';
         }
         return errors;
-      };
+    };
 
     const formik = useFormik({
         initialValues: {
-            version: '',
+            name: '',
+            code: '',
         },
         validate,
         onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
+            dispatch(createVersion(JSON.stringify(values, null, 2)))
         },
-      });
+    });
 
     return(
         <div>
@@ -114,14 +119,26 @@ function VersionList(){
                     <label className="form-label" htmlFor="version">Version:</label>
                     <input
                         className="form-control"
-                        id="version"
-                        name="version"
+                        id="name"
+                        name="name"
                         type="text"
                         placeholder="Enter version"
                         onChange={formik.handleChange}
-                        value={formik.values.version}
+                        value={formik.values.name}
                     />
                     {formik.errors.version ? <div className="form_error">{formik.errors.version}</div> : null}
+                    
+                    <label className="form-label" htmlFor="code">Code:</label>
+                    <input
+                        className="form-control"
+                        id="code"
+                        name="code"
+                        type="text"
+                        placeholder="Enter code"
+                        onChange={formik.handleChange}
+                        value={formik.values.code}
+                    />
+                    {formik.errors.code ? <div className="form_error">{formik.errors.code}</div> : null}
                     <Modal.Footer>
                         <Button onClick={handleClose} variant="secondary">Close</Button>
                         <Button type="submit" variant="primary">Save</Button>
@@ -131,6 +148,6 @@ function VersionList(){
             </Modal>
         </div>
     );
-}
+    }
 
-export default VersionList;
+    export default VersionList;
