@@ -14,8 +14,8 @@ function VersionList(){
     /*============version state initialize=============*/
     const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
-    const [versions, setVersion] = useState(versionList[0]);
-    console.log(versionList[0]);
+    const versions = versionList[0];
+      
     useEffect(() => {
         dispatch(getAllVersion());
       }, [])
