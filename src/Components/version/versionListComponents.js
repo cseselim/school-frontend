@@ -57,7 +57,7 @@ function VersionList(){
 
     useEffect(() => {
         dispatch(getAllVersion());
-      }, [versions])
+      }, [])
 
 
     const [show, setShow] = useState(false);
@@ -87,9 +87,10 @@ function VersionList(){
         },
         validate,
         onSubmit: values => {
-            // dispatch(createVersion(JSON.stringify(values, null, 2)))
-            //alert(stringifyObject(values));
-            alert(JSON.stringify(values, null, 2));
+            const json = JSON.stringify(values);
+            console.log(json);
+            const data = json.replace(/"([^"]+)":/g, '$1:');
+            dispatch(createVersion(data));
         },
     });
 

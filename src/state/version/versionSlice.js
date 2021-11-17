@@ -7,6 +7,7 @@ const initialState={
 export const createVersion = createAsyncThunk(
   "version/create",
   async (value) => {
+    alert(value);
     const res = await versionDataService.create(value);
     return res.data;
   }
