@@ -15,6 +15,7 @@ function Datatable(props){
                 data={ props.data }
                 columns={ props.columns }
                 search
+                loading={ true }
                 >
                 {
                     props => (
@@ -23,8 +24,9 @@ function Datatable(props){
                             <SearchBar { ...props.searchProps } />
                         </div>
                         <BootstrapTable
-                        { ...props.baseProps } pagination = {paginationFactory()}
-                        />
+                        { ...props.baseProps } pagination = {paginationFactory()} 
+                        >
+                        </BootstrapTable>
                     </div>
                     )
                 }

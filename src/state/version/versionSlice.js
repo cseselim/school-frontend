@@ -28,13 +28,14 @@ export const updateTutorial = createAsyncThunk(
   }
 );
 
-export const deleteTutorial = createAsyncThunk(
-  "tutorials/delete",
-  async ({ id }) => {
-    await TutorialDataService.remove(id);
-    return { id };
-  }
-);
+export const deleteVersion = createAsyncThunk(
+   "version/delete",
+    async (id) => {
+      await TutorialDataService.deleteVersion(id);
+      return { id };
+    }
+ );
+
 
 export const versionSlice = createSlice({
   name: 'version',
@@ -43,6 +44,10 @@ export const versionSlice = createSlice({
   extraReducers: {
     [getAllVersion.fulfilled]: (state, action) => {
       state.value.push(action.payload.data);
+    },
+    [deleteVersion.fulfilled]: (state, action) => {
+      let index = state.value.findIndex(({ id }) => id === action.payload.id);
+      state.value.splice(index, 1);
     },
   },
 });

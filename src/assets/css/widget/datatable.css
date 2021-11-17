@@ -38,3 +38,13 @@
 .react-bootstrap-table-pagination .btn{
     padding: 3px 15px;
 }
+
+/*========================Button customize css================*/
+.edit_button{
+    padding: 2px 7px;
+    margin-right: 3px;
+}
+.delete_button{
+    padding: 2px 7px;
+    margin-right: 3px;
+}
