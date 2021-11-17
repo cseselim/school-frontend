@@ -87,7 +87,7 @@ function VersionList(){
         },
         validate,
         onSubmit: values => {
-            const json = JSON.stringify(values);
+            const json = JSON.stringify(values, " ", 2);
             console.log(json);
             const data = json.replace(/"([^"]+)":/g, '$1:');
             dispatch(createVersion(data));
