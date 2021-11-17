@@ -8,6 +8,7 @@ import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
 import {getAllVersion, deleteVersion, createVersion} from '../../state/version/versionSlice';
 import versionService from '../../services/version/versionService';
+import stringifyObject from 'stringify-object';
 
 function VersionList(){
     const versionList = useSelector((state) => state.version.value);
@@ -86,7 +87,9 @@ function VersionList(){
         },
         validate,
         onSubmit: values => {
-            dispatch(createVersion(JSON.stringify(values, null, 2)))
+            // dispatch(createVersion(JSON.stringify(values, null, 2)))
+            //alert(stringifyObject(values));
+            alert(JSON.stringify(values, null, 2));
         },
     });
 
@@ -126,7 +129,7 @@ function VersionList(){
                         onChange={formik.handleChange}
                         value={formik.values.name}
                     />
-                    {formik.errors.version ? <div className="form_error">{formik.errors.version}</div> : null}
+                    {formik.errors.name ? <div className="form_error">{formik.errors.name}</div> : null}
                     
                     <label className="form-label" htmlFor="code">Code:</label>
                     <input
