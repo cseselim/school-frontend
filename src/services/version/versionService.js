@@ -9,7 +9,12 @@ const get = id => {
 };
 
 const create = data => {
+  //alert(data);
   return http.post("/version", data);
+};
+
+const deleteVersion = id => {
+  return http.delete(`/version/${id}`);
 };
 
 const update = (id, data) => {
@@ -20,6 +25,7 @@ const VersionService = {
   getAll,
   get,
   create,
+  deleteVersion,
   update,
 };
 

@@ -1,13 +1,13 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
-import TutorialDataService from "../../services/version/versionService";
+import versionDataService from "../../services/version/versionService";
 
 const initialState={
   value: [],
 };
-export const createTutorial = createAsyncThunk(
-  "tutorials/create",
-  async ({ title, description }) => {
-    const res = await TutorialDataService.create({ title, description });
+export const createVersion = createAsyncThunk(
+  "version/create",
+  async (value) => {
+    const res = await versionDataService.create(value);
     return res.data;
   }
 );
@@ -15,7 +15,7 @@ export const createTutorial = createAsyncThunk(
 export const getAllVersion = createAsyncThunk(
   "version/get",
   async () => {
-    const res = await TutorialDataService.getAll();
+    const res = await versionDataService.getAll();
     return res.data;
   }
 );
@@ -23,26 +23,35 @@ export const getAllVersion = createAsyncThunk(
 export const updateTutorial = createAsyncThunk(
   "tutorials/update",
   async ({ id, data }) => {
-    const res = await TutorialDataService.update(id, data);
+    const res = await versionDataService.update(id, data);
     return res.data;
   }
 );
 
-export const deleteTutorial = createAsyncThunk(
-  "tutorials/delete",
-  async ({ id }) => {
-    await TutorialDataService.remove(id);
-    return { id };
-  }
-);
+export const deleteVersion = createAsyncThunk(
+   "version/delete",
+    async (id) => {
+      await versionDataService.deleteVersion(id);
+      return { id };
+    }
+ );
+
 
 export const versionSlice = createSlice({
   name: 'version',
   initialState,
   reducers:{},
   extraReducers: {
+    [createVersion.fulfilled]: (state, action) => {
+      state.value.push(action.payload.data);
+    },
     [getAllVersion.fulfilled]: (state, action) => {
       state.value.push(action.payload.data);
+    },
+    [deleteVersion.fulfilled]: (state, action) => {
+      let index = state.value.findIndex(({ id }) => id === action.payload.id);
+      // state.value.splice(index, 1);
+      alert(index);
     },
   },
 });

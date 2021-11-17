@@ -3,93 +3,47 @@ import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { Formik,Field,useFormik,ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+//import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
-import TextField from '../../widget/form/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion} from '../../state/version/versionSlice';
-import versionService from '../../services/version/versionService';
+import {getAllVersion, deleteVersion, createVersion} from '../../state/version/versionSlice';
+//import versionService from '../../services/version/versionService';
+//import stringifyObject from 'stringify-object';
 
 function VersionList(){
+    /*============version state initialize=============*/
     const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
-
+    const [versions, setVersion] = useState(versionList[0]);
+    console.log(versionList[0]);
     useEffect(() => {
         dispatch(getAllVersion());
-    }, [])
-
-      const products = versionList[0];
-      console.log(products);
-
-    // const products = [
-    //     {
-    //     id: 1,
-    //     name: 'TV',
-    //     'price': 1000
-    //     },
-    //     {
-    //     id: 2,
-    //     name: 'Mobile',
-    //     'price': 500
-    //     },
-    //     {
-    //     id: 3,
-    //     name: 'Book',
-    //     'price': 20
-    //     },
-    //     {
-    //         id: 4,
-    //         name: 'Book 4',
-    //         'price': 204
-    //     },
-    //     {
-    //         id: 5,
-    //         name: 'Book 5',
-    //         'price': 205
-    //     },
-    //     {
-    //         id: 6,
-    //         name: 'Book 6',
-    //         'price': 206
-    //     },
-    //     {
-    //         id: 7,
-    //         name: 'Book 7',
-    //         'price': 207
-    //     },
-    //     {
-    //         id: 8,
-    //         name: 'Book 8',
-    //         'price': 208
-    //     },
-    //     {
-    //         id: 9,
-    //         name: 'Book 9',
-    //         'price': 209
-    //     },
-    //     {
-    //         id: 10,
-    //         name: 'Book 10',
-    //         'price': 2010
-    //     },
-    //     {
-    //         id: 11,
-    //         name: 'Book 11',
-    //         'price': 2011
-    //     },
-    // ];
-    // //console.log(products);
-    // const columns = [{
-    //     dataField: 'id',
-    //     text: 'Product ID',
-    //     }, {
-    //     dataField: 'name',
-    //     text: 'Product Name'
-    //     }, {
-    //     dataField: 'code',
-    //     text: 'Product Price'
-    //     },
-    // ];
+      }, [])
+    
+    /*============version delete funtion=============*/
+    const removeVersion = (id) => {
+    dispatch(deleteVersion(id))
+      .then(response => {
+        alert('Version deleted');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    };
+    
+    /*============datatable edit delete button and datatable data send=============*/
+    const ActionFormat = (id, row) => {
+        return (
+            <div>
+                <button type="button"className="btn btn-outline-primary btn-sm ts-buttom edit_button" size="sm">
+                    Edit
+                </button>
+                <button type="button" className="btn btn-outline-danger btn-sm ml-2 ts-buttom delete_button" size="sm" onClick={() => removeVersion(id)}>
+                    Delete
+                </button>
+            </div>
+        );
+    }
 
     const columns = [{
         dataField: 'id',
@@ -100,36 +54,48 @@ function VersionList(){
         }, {
         dataField: 'code',
         text: 'Code'
+        },{
+        dataField: 'date',
+        text: 'Action',
+        formatter: ActionFormat,
         },
     ];
 
-    // const { SearchBar } = Search;
+    //   useEffect(() => {
+    //     dispatch(getAllVersion());
+    //   }, [versions])
 
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-
+    /*============form validation and submit=============*/
     const validate = values => {
         const errors = {};
-        if (!values.version) {
-          errors.version = 'Version is required';
-        } else if (values.version.length > 15) {
-          errors.version = 'Must be 15 characters or less';
+        if (!values.name) {
+        errors.name = 'Version is required';
+        }
+        if (!values.code) {
+            errors.code = 'Code is required';
+        } else if (values.code.length < 4 ) {
+            errors.code = 'Code Must be 4 number';
         }
         return errors;
-      };
+    };
 
     const formik = useFormik({
         initialValues: {
-            version: '',
+            name: '',
+            code: '',
         },
         validate,
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit: (values, onSubmitProps) => {
+            dispatch(createVersion(JSON.stringify(values, " ", 2)));
+            onSubmitProps.resetForm();
+            setShow(false);
         },
-      });
+    });
+
+    /*============form modal show and hide=============*/
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(formik.setErrors({}));
+    const handleShow = () => setShow(true);
 
     return(
         <div>
@@ -147,28 +113,42 @@ function VersionList(){
                     </Col>
                 </Row>
             </div>
-            {products ? (
-                <Versionlisttable data={products} columns={columns}></Versionlisttable>
-              ) : (
-                <h1>Data is not available</h1>
-              )}
+            {versions ?
+                <Versionlisttable data={versions} columns={columns}></Versionlisttable>
+                :<p>Version is not available!</p>
+            }
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Version/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                 <form onSubmit={formik.handleSubmit}>
-                    <label className="form-label" htmlFor="version">Version:</label>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <label className="form-label" htmlFor="version">Version:</label>
+                        <input
+                            className="form-control"
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter version"
+                            onChange={formik.handleChange}
+                            value={formik.values.name}
+                        />
+                        {formik.errors.name ? <div className="form_error">{formik.errors.name}</div> : null}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <label className="form-label" htmlFor="code">Code:</label>
                     <input
                         className="form-control"
-                        id="version"
-                        name="version"
+                        id="code"
+                        name="code"
                         type="text"
-                        placeholder="Enter version"
+                        placeholder="Enter code"
                         onChange={formik.handleChange}
-                        value={formik.values.version}
+                        value={formik.values.code}
                     />
-                    {formik.errors.version ? <div className="form_error">{formik.errors.version}</div> : null}
+                    {formik.errors.code ? <div className="form_error">{formik.errors.code}</div> : null}
+                    </Form.Group>
                     <Modal.Footer>
                         <Button onClick={handleClose} variant="secondary">Close</Button>
                         <Button type="submit" variant="primary">Save</Button>
@@ -178,6 +158,6 @@ function VersionList(){
             </Modal>
         </div>
     );
-}
+    }
 
-export default VersionList;
+    export default VersionList;
