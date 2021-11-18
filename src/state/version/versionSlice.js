@@ -46,7 +46,7 @@ export const versionSlice = createSlice({
       state.value.push(action.payload.data);
     },
     [deleteVersion.fulfilled]: (state, action) => {
-      let index = state.value[0].findIndex((id) => id === action.payload.id);
+      let index = state.value[0].findIndex(({id}) => id === action.payload.id);
       state.value[0].splice(index, 1);
     },
   },
