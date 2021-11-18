@@ -1,9 +1,6 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit';
 import versionDataService from "../../services/version/versionService";
 
-const initialState={
-  value: [],
-};
 export const createVersion = createAsyncThunk(
   "version/create",
   async (value) => {
@@ -39,19 +36,18 @@ export const deleteVersion = createAsyncThunk(
 
 export const versionSlice = createSlice({
   name: 'version',
-  initialState,
+  initialState: { value: []},
   reducers:{},
   extraReducers: {
     [createVersion.fulfilled]: (state, action) => {
-      state.value.push(action.payload.data);
+      state.value[0].push(action.payload.id);
     },
     [getAllVersion.fulfilled]: (state, action) => {
       state.value.push(action.payload.data);
     },
     [deleteVersion.fulfilled]: (state, action) => {
-      let index = state.value.findIndex(({ id }) => id === action.payload.id);
-      // state.value.splice(index, 1);
-      alert(index);
+      let index = state.value[0].findIndex((id) => id === action.payload.id);
+      state.value[0].splice(index, 1);
     },
   },
 });

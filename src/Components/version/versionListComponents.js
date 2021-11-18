@@ -14,15 +14,16 @@ function VersionList(){
     /*============version state initialize=============*/
     const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
+    console.log(versionList);
     const versions = versionList[0];
       
     useEffect(() => {
         dispatch(getAllVersion());
-      }, [])
+    }, [])
     
     /*============version delete funtion=============*/
     const removeVersion = (id) => {
-    dispatch(deleteVersion(id))
+        dispatch(deleteVersion(id))
       .then(response => {
         alert('Version deleted');
       })
@@ -55,7 +56,7 @@ function VersionList(){
         dataField: 'code',
         text: 'Code'
         },{
-        dataField: 'date',
+        dataField: 'id',
         text: 'Action',
         formatter: ActionFormat,
         },
