@@ -27,7 +27,8 @@ export const versionEditState = createAsyncThunk(
 
 export const updateVersion = createAsyncThunk(
   "tutorials/update",
-  async ({ id, data }) => {
+  async (id, data) => {
+    alert(data);
     const res = await versionDataService.update(id, data);
     return res.data;
   }

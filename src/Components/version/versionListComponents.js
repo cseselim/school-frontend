@@ -6,7 +6,7 @@ import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion, deleteVersion, createVersion, versionEditState} from '../../state/version/versionSlice';
+import {getAllVersion, deleteVersion, createVersion, versionEditState, updateVersion} from '../../state/version/versionSlice';
 //import versionService from '../../services/version/versionService';
 //import stringifyObject from 'stringify-object';
 
@@ -70,41 +70,6 @@ function VersionList(){
         },
     ];
 
-    //   useEffect(() => {
-    //     dispatch(getAllVersion());
-    //   }, [versions])
-
-    /*============form validation and submit=============*/
-    // const validate = values => {
-    //     const errors = {};
-    //     if (!values.name) {
-    //     errors.name = 'Version is required';
-    //     }
-    //     if (!values.code) {
-    //         errors.code = 'Code is required';
-    //     } else if (values.code.length < 4 ) {
-    //         errors.code = 'Code Must be 4 number';
-    //     }
-    //     return errors;
-    // };
-
-    // const formik = useFormik({
-    //     validateOnChange:true,
-    //     enableReinitialize:true,
-    //     initialValues: {
-    //         name: '',
-    //         code: '',
-    //     },
-    //     // validate,
-    //     onSubmit: (values, onSubmitProps) => {
-    //         dispatch(createVersion(JSON.stringify(values, " ", 2)));
-    //         onSubmitProps.resetForm();
-    //         setShow(false);
-    //     },
-    // });
-
-    // console.log(formik.values);
-
     const versionEditData = useSelector((state) => state.version.editVersion);
 
     /* Conditionally rendering initial values based on CREATE or EDIT */
@@ -120,9 +85,13 @@ function VersionList(){
     })
 
     const onSubmit = async (values,onSubmitProps) => {
-        dispatch(createVersion(JSON.stringify(values, " ", 2)));
+        if(!values.id){
+            dispatch(createVersion(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
             setShow(false);
+        }else{
+            dispatch(updateVersion(values.id, values));
+        }
     } 
 
 
@@ -177,6 +146,20 @@ function VersionList(){
                     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
                     {formik => (
                         <form onSubmit={formik.handleSubmit}>
+                            {
+                                versionEditData.id
+                                ? 
+                                <input className="form-control" type="text" {...formik.getFieldProps('id')}/>
+                                : <></>
+                            }
+                            <label htmlFor="version">Version:</label>
+                            <input
+                                className="form-control"
+                                id="name"
+                                type="text"
+                                placeholder="Version"
+                                {...formik.getFieldProps('name')}
+                            />
                         <Form.Group className="mb-3" controlId="formBasicVersion">
                             <label htmlFor="version">Version:</label>
                             <input
