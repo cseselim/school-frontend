@@ -3,7 +3,7 @@ import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
-//import * as Yup from 'yup';
+import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
 import {getAllVersion, deleteVersion, createVersion, versionEditState} from '../../state/version/versionSlice';
@@ -75,48 +75,70 @@ function VersionList(){
     //   }, [versions])
 
     /*============form validation and submit=============*/
-    const validate = values => {
-        const errors = {};
-        if (!values.name) {
-        errors.name = 'Version is required';
-        }
-        if (!values.code) {
-            errors.code = 'Code is required';
-        } else if (values.code.length < 4 ) {
-            errors.code = 'Code Must be 4 number';
-        }
-        return errors;
+    // const validate = values => {
+    //     const errors = {};
+    //     if (!values.name) {
+    //     errors.name = 'Version is required';
+    //     }
+    //     if (!values.code) {
+    //         errors.code = 'Code is required';
+    //     } else if (values.code.length < 4 ) {
+    //         errors.code = 'Code Must be 4 number';
+    //     }
+    //     return errors;
+    // };
+
+    // const formik = useFormik({
+    //     validateOnChange:true,
+    //     enableReinitialize:true,
+    //     initialValues: {
+    //         name: '',
+    //         code: '',
+    //     },
+    //     // validate,
+    //     onSubmit: (values, onSubmitProps) => {
+    //         dispatch(createVersion(JSON.stringify(values, " ", 2)));
+    //         onSubmitProps.resetForm();
+    //         setShow(false);
+    //     },
+    // });
+
+    // console.log(formik.values);
+
+    const versionEditData = useSelector((state) => state.version.editVersion);
+
+    /* Conditionally rendering initial values based on CREATE or EDIT */
+    const initialValues = {
+        id : versionEditData.id || '',
+        name : versionEditData.name || '',
+        code : versionEditData.code || '',
     };
 
-    const formik = useFormik({
-        validateOnChange:true,
-        enableReinitialize:true,
-        initialValues: {
-            name: 'asdfdsaf',
-            code: '2365',
-        },
-        // validate,
-        onSubmit: (values, onSubmitProps) => {
-            dispatch(createVersion(JSON.stringify(values, " ", 2)));
+    const validationSchema = Yup.object({
+        name : Yup.string().required('Name is required'),
+        code : Yup.string().required('Code is required'),
+    })
+
+    const onSubmit = async (values,onSubmitProps) => {
+        dispatch(createVersion(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
             setShow(false);
-        },
-    });
+    } 
 
-    console.log(formik.values);
+
 
     /*============form modal show and hide=============*/
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(formik.setErrors({}));
+    // const handleClose = () => setShow(formik.setErrors({}));
+    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
 
     /*============version Edit=============*/
-    const versionEditData = useSelector((state) => state.version.editVersion);
-    if(versionEditData){
-        formik.values = versionEditData
-    }
-    console.log(formik.values);
+    // if(versionEditData){
+    //     formik.values = versionEditData
+    // }
+
     const editVersionHandle = (id) => {
         dispatch(versionEditState(id))
       .then(response => {
@@ -152,38 +174,43 @@ function VersionList(){
                 <Modal.Title>Version/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <Form onSubmit={formik.handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <label className="form-label" htmlFor="version">Version:</label>
-                        <input
-                            className="form-control"
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="Enter version"
-                            onChange={formik.handleChange}
-                            value={formik.values.name}
-                        />
-                        {/* {formik.errors.name ? <div className="form_error">{formik.errors.name}</div> : null} */}
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <label className="form-label" htmlFor="code">Code:</label>
-                    <input
-                        className="form-control"
-                        id="code"
-                        name="code"
-                        type="text"
-                        placeholder="Enter code"
-                        onChange={formik.handleChange}
-                        value={formik.values.code}
-                    />
-                    {/* {formik.errors.code ? <div className="form_error">{formik.errors.code}</div> : null} */}
-                    </Form.Group>
-                    <Modal.Footer>
-                        <Button onClick={handleClose} variant="secondary">Close</Button>
-                        <Button type="submit" variant="primary">Save</Button>
-                    </Modal.Footer>
-                    </Form>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
+                    {formik => (
+                        <form onSubmit={formik.handleSubmit}>
+                        <Form.Group className="mb-3" controlId="formBasicVersion">
+                            <label htmlFor="version">Version:</label>
+                            <input
+                                className="form-control"
+                                id="name"
+                                type="text"
+                                placeholder="Version"
+                                {...formik.getFieldProps('name')}
+                            />
+                            {formik.touched.name && formik.errors.name ? (
+                            <div style={{color: "red"}}>{formik.errors.name}</div>
+                        ) : null}
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicCode">
+                            <label htmlFor="code">Code:</label>
+                            <input
+                                className="form-control"
+                                id="code"
+                                type="text"
+                                placeholder="Code"
+                                {...formik.getFieldProps('code')}
+                            />
+                            {formik.touched.code && formik.errors.code ? (
+                            <div style={{color: "red"}}>{formik.errors.code}</div>
+                        ) : null}
+                        </Form.Group>
+                
+                        <Modal.Footer>
+                            <Button onClick={handleClose} variant="secondary">Close</Button>
+                            <Button type="submit" variant="primary">Save</Button>
+                        </Modal.Footer>
+                        </form>
+                    )}
+                    </Formik>
                 </Modal.Body>
             </Modal>
         </div>
