@@ -17,7 +17,15 @@ export const getAllVersion = createAsyncThunk(
   }
 );
 
-export const updateTutorial = createAsyncThunk(
+export const versionEditState = createAsyncThunk(
+  "version/edit",
+  async (id) => {
+    const res = await versionDataService.get(id);
+    return res.data;
+  }
+);
+
+export const updateVersion = createAsyncThunk(
   "tutorials/update",
   async ({ id, data }) => {
     const res = await versionDataService.update(id, data);
@@ -36,19 +44,27 @@ export const deleteVersion = createAsyncThunk(
 
 export const versionSlice = createSlice({
   name: 'version',
-  initialState: { value: []},
+  initialState: { value: [],editVersion:[]},
   reducers:{},
   extraReducers: {
+    
     [createVersion.fulfilled]: (state, action) => {
       state.value[0].push(action.payload.id);
     },
+    
     [getAllVersion.fulfilled]: (state, action) => {
       state.value.push(action.payload.data);
     },
+
+    [versionEditState.fulfilled]: (state, action) => {
+      state.editVersion = action.payload.data;
+    },
+
     [deleteVersion.fulfilled]: (state, action) => {
       let index = state.value[0].findIndex(({id}) => id === action.payload.id);
       state.value[0].splice(index, 1);
     },
+    
   },
 });
 

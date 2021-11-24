@@ -2,19 +2,27 @@ import React,{useState,useEffect,useCallback, version} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import { Formik,Field,useFormik,ErrorMessage } from 'formik';
+import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
 //import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion, deleteVersion, createVersion} from '../../state/version/versionSlice';
+import {getAllVersion, deleteVersion, createVersion, versionEditState} from '../../state/version/versionSlice';
 //import versionService from '../../services/version/versionService';
 //import stringifyObject from 'stringify-object';
 
 function VersionList(){
+
+    const versionEdit = {
+        id: "",
+        name: "",
+        code: "",
+      };
+
+    const [currentVersion, setCurrentVersion] = useState(versionEdit);
+
     /*============version state initialize=============*/
     const versionList = useSelector((state) => state.version.value);
     const dispatch = useDispatch();
-    console.log(versionList);
     const versions = versionList[0];
       
     useEffect(() => {
@@ -36,7 +44,7 @@ function VersionList(){
     const ActionFormat = (id, row) => {
         return (
             <div>
-                <button type="button"className="btn btn-outline-primary btn-sm ts-buttom edit_button" size="sm">
+                <button type="button"className="btn btn-outline-primary btn-sm ts-buttom edit_button" size="sm" onClick={() => editVersionHandle(id)}>
                     Edit
                 </button>
                 <button type="button" className="btn btn-outline-danger btn-sm ml-2 ts-buttom delete_button" size="sm" onClick={() => removeVersion(id)}>
@@ -47,7 +55,7 @@ function VersionList(){
     }
 
     const columns = [{
-        dataField: 'id',
+        dataField: '1',
         text: 'ID',
         }, {
         dataField: 'name',
@@ -81,11 +89,13 @@ function VersionList(){
     };
 
     const formik = useFormik({
+        validateOnChange:true,
+        enableReinitialize:true,
         initialValues: {
-            name: '',
-            code: '',
+            name: 'asdfdsaf',
+            code: '2365',
         },
-        validate,
+        // validate,
         onSubmit: (values, onSubmitProps) => {
             dispatch(createVersion(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
@@ -93,10 +103,29 @@ function VersionList(){
         },
     });
 
+    console.log(formik.values);
+
     /*============form modal show and hide=============*/
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(formik.setErrors({}));
     const handleShow = () => setShow(true);
+
+
+    /*============version Edit=============*/
+    const versionEditData = useSelector((state) => state.version.editVersion);
+    if(versionEditData){
+        formik.values = versionEditData
+    }
+    console.log(formik.values);
+    const editVersionHandle = (id) => {
+        dispatch(versionEditState(id))
+      .then(response => {
+        setShow(true)
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    };
 
     return(
         <div>
@@ -123,7 +152,7 @@ function VersionList(){
                 <Modal.Title>Version/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <form onSubmit={formik.handleSubmit}>
+                <Form onSubmit={formik.handleSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <label className="form-label" htmlFor="version">Version:</label>
                         <input
@@ -135,7 +164,7 @@ function VersionList(){
                             onChange={formik.handleChange}
                             value={formik.values.name}
                         />
-                        {formik.errors.name ? <div className="form_error">{formik.errors.name}</div> : null}
+                        {/* {formik.errors.name ? <div className="form_error">{formik.errors.name}</div> : null} */}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                     <label className="form-label" htmlFor="code">Code:</label>
@@ -148,13 +177,13 @@ function VersionList(){
                         onChange={formik.handleChange}
                         value={formik.values.code}
                     />
-                    {formik.errors.code ? <div className="form_error">{formik.errors.code}</div> : null}
+                    {/* {formik.errors.code ? <div className="form_error">{formik.errors.code}</div> : null} */}
                     </Form.Group>
                     <Modal.Footer>
                         <Button onClick={handleClose} variant="secondary">Close</Button>
                         <Button type="submit" variant="primary">Save</Button>
                     </Modal.Footer>
-                    </form>
+                    </Form>
                 </Modal.Body>
             </Modal>
         </div>
