@@ -18,7 +18,7 @@ const deleteVersion = id => {
 };
 
 const update = (id, data) => {
-  return http.put(`/version/${id}`, data);
+  return http.post(`/version/${id}`, data);
 };
 
 const VersionService = {

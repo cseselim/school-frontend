@@ -16,7 +16,7 @@ class RestClient {
     static  PostRequest=(postURl,postJson)=>{
 
        let config={
-           headers: {'Content-Type': 'application/x-www-form-urlencoded',}
+        //    headers: {'Content-Type': 'application/x-www-form-urlencoded',}
        }
 
         return axios.post(postURl,postJson,config).then(response=>{

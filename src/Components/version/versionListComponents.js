@@ -90,7 +90,8 @@ function VersionList(){
             onSubmitProps.resetForm();
             setShow(false);
         }else{
-            dispatch(updateVersion(values.id, values));
+            dispatch(updateVersion(values));
+            setShow(false);
         }
     } 
 
@@ -152,14 +153,6 @@ function VersionList(){
                                 <input className="form-control" type="text" {...formik.getFieldProps('id')}/>
                                 : <></>
                             }
-                            <label htmlFor="version">Version:</label>
-                            <input
-                                className="form-control"
-                                id="name"
-                                type="text"
-                                placeholder="Version"
-                                {...formik.getFieldProps('name')}
-                            />
                         <Form.Group className="mb-3" controlId="formBasicVersion">
                             <label htmlFor="version">Version:</label>
                             <input
