@@ -1,24 +1,17 @@
-import React,{useState,useEffect,useCallback, version} from "react";
+import React,{useState,useEffect} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
 import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion, deleteVersion, createVersion, versionEditState, updateVersion} from '../../state/version/versionSlice';
+import {getAllVersion, deleteVersion, createVersion, versionEditState, updateVersion, editStateEmpty} from '../../state/version/versionSlice';
 //import versionService from '../../services/version/versionService';
 //import stringifyObject from 'stringify-object';
 
 function VersionList(){
-
-    const versionEdit = {
-        id: "",
-        name: "",
-        code: "",
-      };
-
-    const [currentVersion, setCurrentVersion] = useState(versionEdit);
 
     /*============version state initialize=============*/
     const versionList = useSelector((state) => state.version.value);
@@ -55,8 +48,11 @@ function VersionList(){
     }
 
     const columns = [{
-        dataField: '1',
-        text: 'ID',
+        dataField: 'sl.no',
+        text: 'Sl No.',
+        formatter: (cell, row, rowIndex, formatExtraData) => {
+            return rowIndex + 1;
+        },
         }, {
         dataField: 'name',
         text: 'Version Name'
@@ -73,7 +69,7 @@ function VersionList(){
     const versionEditData = useSelector((state) => state.version.editVersion);
 
     /* Conditionally rendering initial values based on CREATE or EDIT */
-    const initialValues = {
+    let initialValues = {
         id : versionEditData.id || '',
         name : versionEditData.name || '',
         code : versionEditData.code || '',
@@ -89,6 +85,7 @@ function VersionList(){
             dispatch(createVersion(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
             setShow(false);
+            <ToastContainer />
         }else{
             dispatch(updateVersion(values));
             setShow(false);
@@ -100,14 +97,11 @@ function VersionList(){
     /*============form modal show and hide=============*/
     const [show, setShow] = useState(false);
     // const handleClose = () => setShow(formik.setErrors({}));
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        dispatch(editStateEmpty());
+        setShow(false);
+    }
     const handleShow = () => setShow(true);
-
-
-    /*============version Edit=============*/
-    // if(versionEditData){
-    //     formik.values = versionEditData
-    // }
 
     const editVersionHandle = (id) => {
         dispatch(versionEditState(id))
@@ -150,7 +144,7 @@ function VersionList(){
                             {
                                 versionEditData.id
                                 ? 
-                                <input className="form-control" type="text" {...formik.getFieldProps('id')}/>
+                                <input className="form-control" type="hidden" {...formik.getFieldProps('id')}/>
                                 : <></>
                             }
                         <Form.Group className="mb-3" controlId="formBasicVersion">

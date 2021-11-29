@@ -23,7 +23,8 @@ function Datatable(props){
                             <SearchBar { ...props.searchProps } />
                         </div>
                         <BootstrapTable
-                        { ...props.baseProps } pagination = {paginationFactory()} 
+                        { ...props.baseProps } pagination = {paginationFactory()}
+                        noDataIndication={() => (<div>Data is not available</div>)} 
                         >
                         </BootstrapTable>
                     </div>

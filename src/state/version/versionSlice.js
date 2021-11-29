@@ -38,6 +38,13 @@ export const updateVersion = createAsyncThunk(
   }
 );
 
+export const editStateEmpty = createAsyncThunk(
+  "version/empty",
+  async (values) => {
+    return values;
+  }
+)
+
 export const deleteVersion = createAsyncThunk(
    "version/delete",
     async (id) => {
@@ -67,8 +74,12 @@ export const versionSlice = createSlice({
 
     [updateVersion.fulfilled]: (state, action) => {
       let index = state.value[0].findIndex(({id}) => id === action.payload.data.id);
-      state.value[0].splice(index, 1);
-      state.value[0].push(action.payload.data);
+      state.value[0][index] = {...state[index],...action.payload.data};
+      state.editVersion = {};
+    },
+
+    [editStateEmpty.fulfilled]: (state, action) => {
+      state.editVersion = {};
     },
 
     [deleteVersion.fulfilled]: (state, action) => {
