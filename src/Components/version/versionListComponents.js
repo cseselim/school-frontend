@@ -3,13 +3,12 @@ import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
+import swal from 'sweetalert'
 import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
 import {getAllVersion, deleteVersion, createVersion, versionEditState, updateVersion, editStateEmpty} from '../../state/version/versionSlice';
-//import versionService from '../../services/version/versionService';
-//import stringifyObject from 'stringify-object';
 
 function VersionList(){
 
@@ -24,13 +23,20 @@ function VersionList(){
     
     /*============version delete funtion=============*/
     const removeVersion = (id) => {
-        dispatch(deleteVersion(id))
-      .then(response => {
-        alert('Version deleted');
-      })
-      .catch(e => {
-        console.log(e);
-      });
+        swal({
+            title: "Are you sure?",
+            text: "You want to delete?",
+            icon: false,
+            confirmButtonText: "Yes, delete it!",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                dispatch(deleteVersion(id));
+                toast.success("Version deleted successfully");
+            }
+          });
     };
     
     /*============datatable edit delete button and datatable data send=============*/
@@ -85,13 +91,13 @@ function VersionList(){
             dispatch(createVersion(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
             setShow(false);
-            <ToastContainer />
+            toast.success("Version create successfully");
         }else{
             dispatch(updateVersion(values));
             setShow(false);
+            toast.success("Version update successfully");
         }
-    } 
-
+    }
 
 
     /*============form modal show and hide=============*/
@@ -116,6 +122,7 @@ function VersionList(){
     return(
         <div>
             <div className="content_header">
+                <ToastContainer/>
                 <Row className="Row">
                     <Col xs={6} md={6} className="my-auto">
                         <div className="page_title">
