@@ -21,6 +21,7 @@ function Layout(props){
                         <ul className="side_bar_menu">
                             <li><Link to="/"><FontAwesomeIcon icon={faHome}/>Home</Link></li>
                             <li><Link to="/version-list"><FontAwesomeIcon icon={faStamp}/>Version</Link></li>
+                            <li><Link to="/class-list"><FontAwesomeIcon icon={faQuestionCircle}/>Classes</Link></li>
                             <li><Link to="/question"><FontAwesomeIcon icon={faQuestionCircle}/>Question Bank</Link></li>
                             <li><Link to="/quiz"><FontAwesomeIcon icon={faStamp}/>Quiz</Link></li>
                         </ul>

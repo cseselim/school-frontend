@@ -96,3 +96,17 @@
 .modal-footer{
     margin-top: 28px;
 }
+.modal-title{
+    font-size: 18px !important;
+}
+.modal-body label {
+    display: inline-block;
+    font-size: 14px;
+}
+
+.modal-body .form-control {
+    font-size: 14px;
+}
+.error{
+    font-size: 14px;
+}

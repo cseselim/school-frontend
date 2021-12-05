@@ -8,22 +8,22 @@ import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
-import {getAllVersion, deleteVersion, createVersion, versionEditState, updateVersion, editStateEmpty} from '../../state/version/versionSlice';
+import {getAllClasses, deleteVersion, createClasses, classesEditState, editStateEmpty, updateClasses} from '../../state/classes/classesSlice';
 
-function VersionList(){
+function ClassList(){
 
-    /*============version state initialize=============*/
-    const versionList = useSelector((state) => state.version.value);
-    const dispatch = useDispatch();
-    const versions = versionList[0];
-      
+
     useEffect(() => {
         console.log('abc')
-        dispatch(getAllVersion());
+        dispatch(getAllClasses());
     },[])
-    
+
+    const classesList = useSelector((state) => state.classes.value);
+    const dispatch = useDispatch();
+    const classes = classesList[0];
+
     /*============version delete funtion=============*/
-    const removeVersion = (id) => {
+    const removeClasses = (id) => {
         swal({
             title: "Are you sure?",
             text: "You want to delete?",
@@ -35,19 +35,19 @@ function VersionList(){
           .then((willDelete) => {
             if (willDelete) {
                 dispatch(deleteVersion(id));
-                toast.success("Version deleted successfully");
+                toast.success("Classes deleted successfully");
             }
           });
     };
-    
-    /*============datatable edit delete button and datatable data send=============*/
-    const ActionFormat = (id, row) => {
+
+     /*============datatable edit delete button and datatable data send=============*/
+     const ActionFormat = (id, row) => {
         return (
             <div>
                 <button type="button"className="btn btn-outline-primary btn-sm ts-buttom edit_button" size="sm" onClick={() => editVersionHandle(id)}>
                     Edit
                 </button>
-                <button type="button" className="btn btn-outline-danger btn-sm ml-2 ts-buttom delete_button" size="sm" onClick={() => removeVersion(id)}>
+                <button type="button" className="btn btn-outline-danger btn-sm ml-2 ts-buttom delete_button" size="sm" onClick={() => removeClasses(id)}>
                     Delete
                 </button>
             </div>
@@ -62,10 +62,16 @@ function VersionList(){
         },
         }, {
         dataField: 'name',
-        text: 'Version Name'
+        text: 'Name'
+        },{
+        dataField: 'display_name',
+        text: 'Display Name'
         }, {
         dataField: 'code',
         text: 'Code'
+        },{
+        dataField: 'priority',
+        text: 'Priority'
         },{
         dataField: 'id',
         text: 'Action',
@@ -73,37 +79,41 @@ function VersionList(){
         },
     ];
 
-    const versionEditData = useSelector((state) => state.version.editVersion);
+    const versionEditData = useSelector((state) => state.classes.editVersion);
 
     /* Conditionally rendering initial values based on CREATE or EDIT */
     let initialValues = {
         id : versionEditData.id || '',
         name : versionEditData.name || '',
         code : versionEditData.code || '',
+        display_name: versionEditData.display_name || '',
+        priority: versionEditData.priority || '',
     };
 
     const validationSchema = Yup.object({
         name : Yup.string().required('Name is required'),
+        display_name : Yup.string().required('Display name is required'),
+        display_name : Yup.string().required('Display name is required'),
         code : Yup.string().required('Code is required'),
+        priority : Yup.string().required('Priority is required'), 
     })
 
     const onSubmit = async (values,onSubmitProps) => {
         if(!values.id){
-            dispatch(createVersion(JSON.stringify(values, " ", 2)));
+            dispatch(createClasses(JSON.stringify(values, " ", 2)));
             onSubmitProps.resetForm();
             setShow(false);
-            toast.success("Version create successfully");
+            toast.success("Classes create successfully");
         }else{
-            dispatch(updateVersion(values));
+            dispatch(updateClasses(values));
             setShow(false);
-            toast.success("Version update successfully");
+            toast.success("Classes update successfully");
         }
     }
 
 
     /*============form modal show and hide=============*/
     const [show, setShow] = useState(false);
-    // const handleClose = () => setShow(formik.setErrors({}));
     const handleClose = () => {
         dispatch(editStateEmpty());
         setShow(false);
@@ -111,7 +121,7 @@ function VersionList(){
     const handleShow = () => setShow(true);
 
     const editVersionHandle = (id) => {
-        dispatch(versionEditState(id))
+        dispatch(classesEditState(id))
       .then(response => {
         setShow(true)
       })
@@ -120,14 +130,15 @@ function VersionList(){
       });
     };
 
-    return(
-        <div>
+
+    return (
+        <>
             <div className="content_header">
                 <ToastContainer/>
                 <Row className="Row">
                     <Col xs={6} md={6} className="my-auto">
                         <div className="page_title">
-                            <h1><FontAwesomeIcon icon={faList}/>Version List</h1>
+                            <h1><FontAwesomeIcon icon={faList}/>Class List</h1>
                         </div>
                     </Col>
                     <Col xs={6} md={6} className="text-right">
@@ -137,13 +148,14 @@ function VersionList(){
                     </Col>
                 </Row>
             </div>
-            {versions ?
-                <Versionlisttable data={versions} columns={columns}></Versionlisttable>
-                :<p>Version is not available!</p>
+            {classes ?
+                <Versionlisttable data={classes} columns={columns}></Versionlisttable>
+                :<p>Classes is not available!</p>
             }
+
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Version/Add or Edit</Modal.Title>
+                <Modal.Title>Class/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
@@ -156,16 +168,29 @@ function VersionList(){
                                 : <></>
                             }
                         <Form.Group className="mb-3" controlId="formBasicVersion">
-                            <label htmlFor="version">Version:</label>
+                            <label htmlFor="name">Class Name:</label>
                             <input
                                 className="form-control"
                                 id="name"
                                 type="text"
-                                placeholder="Version"
+                                placeholder="Class Name"
                                 {...formik.getFieldProps('name')}
                             />
                             {formik.touched.name && formik.errors.name ? (
-                            <div style={{color: "red"}}>{formik.errors.name}</div>
+                            <div className="error" style={{color: "red"}}>{formik.errors.name}</div>
+                        ) : null}
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicVersion">
+                            <label htmlFor="DisplayName">Display Name:</label>
+                            <input
+                                className="form-control"
+                                id="name"
+                                type="text"
+                                placeholder="Display Name"
+                                {...formik.getFieldProps('display_name')}
+                            />
+                            {formik.touched.name && formik.errors.display_name ? (
+                            <div className="error" style={{color: "red"}}>{formik.errors.display_name}</div>
                         ) : null}
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicCode">
@@ -178,7 +203,21 @@ function VersionList(){
                                 {...formik.getFieldProps('code')}
                             />
                             {formik.touched.code && formik.errors.code ? (
-                            <div style={{color: "red"}}>{formik.errors.code}</div>
+                            <div className="error" style={{color: "red"}}>{formik.errors.code}</div>
+                        ) : null}
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicCode">
+                            <label htmlFor="priority">Priority:</label>
+                            <input
+                                className="form-control"
+                                id="code"
+                                type="text"
+                                placeholder="Priority"
+                                {...formik.getFieldProps('priority')}
+                            />
+                            {formik.touched.code && formik.errors.priority ? (
+                            <div className="error" style={{color: "red"}}>{formik.errors.priority}</div>
                         ) : null}
                         </Form.Group>
                 
@@ -191,8 +230,8 @@ function VersionList(){
                     </Formik>
                 </Modal.Body>
             </Modal>
-        </div>
-    );
-    }
+        </>   
+    )
+}
 
-    export default VersionList;
+    export default ClassList;

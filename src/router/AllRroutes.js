@@ -4,6 +4,7 @@ import Home from "../Components/Home";
 import Question from "../Components/Question";
 import Quiz from "../Components/Quiz";
 import VersionList from "../Components/version/versionListComponents";
+import ClassList from "../Components/classes/classListComponent";
 class AllRroutes extends Component {
     render() {
         return (
@@ -13,6 +14,7 @@ class AllRroutes extends Component {
                     <Route exact path="/question" component={Question}/>
                     <Route exact path="/quiz" component={Quiz}/>
                     <Route exact path="/version-list" component={VersionList}/>
+                    <Route exact path="/class-list" component={ClassList} />
                 </Switch>
             </Fragment>
         );
