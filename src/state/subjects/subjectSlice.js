@@ -64,12 +64,13 @@ export const deleteSubject = createAsyncThunk(
 
 export const subjectSlice = createSlice({
   name: 'subject',
-  initialState: { value: [],editSubject:[], imgUrl:[]},
+  initialState: { value: [], editSubject:[], imgUrl:[]},
   reducers:{},
   extraReducers: {
     
     [createSubject.fulfilled]: (state, action) => {
       state.value[0].push(action.payload.id);
+      state.imgUrl = {};
     },
     
     [getAllSubject.fulfilled]: (state, action) => {

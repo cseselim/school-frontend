@@ -9,18 +9,38 @@ import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
 import {getAllSubject, deleteSubject, createSubject, subjectEditState, editStateEmpty, updateSubject,subjectFileUpload} from '../../state/subjects/subjectSlice';
+import { getAllVersion } from '../../state/version/versionSlice';
+import { getAllClasses } from '../../state/classes/classesSlice';
+
 
 function ClassList(){
 
 
     useEffect(() => {
-        console.log('abc')
         dispatch(getAllSubject());
     },[])
-
     const subjectList = useSelector((state) => state.subject.value);
     const dispatch = useDispatch();
     const subjects = subjectList[0];
+
+    /*============version list for dropdown option=============*/
+
+    useEffect(() => {
+        dispatch(getAllVersion());
+    },[])
+
+    const versionList = useSelector((state) => state.version.value);
+    const versions = versionList[0];
+
+    /*============Class list for dropdown option=============*/
+
+    useEffect(() => {
+        dispatch(getAllClasses());
+    },[])
+
+    const classesList = useSelector((state) => state.classes.value);
+    const classes = classesList[0];
+
 
     /*============version delete funtion=============*/
     const removeClasses = (id) => {
@@ -96,7 +116,7 @@ function ClassList(){
         name : Yup.string().required('Name is required'),
         code : Yup.string().required('Code is required'),
         priority : Yup.string().required('Priority is required'), 
-        image_url : Yup.string().min(1,"select at least 1 file")
+        image_url : Yup.string().required('Subject Image is required')
     })
 
     const onSubmit = async (values,onSubmitProps) => {
@@ -133,7 +153,7 @@ function ClassList(){
     };
 
     const fileUpload = (files) =>{
-        return dispatch(subjectFileUpload(files));
+        dispatch(subjectFileUpload(files));
     }
     var subjectImage = useSelector((state) => state.subject.imgUrl);
 
@@ -164,7 +184,7 @@ function ClassList(){
                 <Modal.Title>Subject/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Formik initialValues={initialValues} enableReinitialize={true} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
                     {formik => (
                         <Form onSubmit={formik.handleSubmit}>
                             {
@@ -181,8 +201,9 @@ function ClassList(){
                                 {...formik.getFieldProps('version_id')}
                             >
                                 <option value="" label="Select Version" />
-                                <option value="1" label="Bangla" />
-                                <option value="2" label="English" />
+                                {versions.map((version) =>
+                                    <option value={version.id}>{version.name}</option>
+                                )}
                             </select>
                             {formik.touched.version_id && formik.errors.version_id ? (
                             <div className="error" style={{color: "red"}}>{formik.errors.version_id}</div>
@@ -195,10 +216,9 @@ function ClassList(){
                                 {...formik.getFieldProps('class_id')}
                             >
                                 <option value="" label="Select Class" />
-                                <option value="1" label="Six" />
-                                <option value="2" label="Seven" />
-                                <option value="3" label="Eight" />
-                                <option value="4" label="Nine" />
+                                {classes.map((classItem) =>
+                                    <option value={classItem.id}>{classItem.name}</option>
+                                )}
                             </select>
                             {formik.touched.class_id && formik.errors.class_id ? (
                             <div className="error" style={{color: "red"}}>{formik.errors.class_id}</div>
@@ -258,16 +278,14 @@ function ClassList(){
                             <input 
                             id="image_url"
                             name="image_url"
-                            type="text"
+                            type="hidden"
                             value={formik.values.image_url = subjectImage}
                             />
                             <img style={{width: "116px",display: "block",marginTop: "12px"}} src={subjectImage} />
-                            {formik.errors.image_url ? (
+                            {formik.touched.image_url && formik.errors.image_url ? (
                             <div className="error" style={{color: "red"}}>{formik.errors.image_url}</div>
                         ) : null}
                         </Form.Group>
-                        
-                
                         <Modal.Footer>
                             <Button onClick={handleClose} variant="secondary">Close</Button>
                             <Button type="submit" variant="primary">Save</Button>
