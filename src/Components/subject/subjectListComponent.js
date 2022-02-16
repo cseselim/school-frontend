@@ -116,7 +116,7 @@ function ClassList(){
         name : Yup.string().required('Name is required'),
         code : Yup.string().required('Code is required'),
         priority : Yup.string().required('Priority is required'), 
-        image_url : Yup.string().required('Subject Image is required')
+        //image_url : Yup.string().required('Subject Image is required'),
     })
 
     const onSubmit = async (values,onSubmitProps) => {
@@ -184,7 +184,7 @@ function ClassList(){
                 <Modal.Title>Subject/Add or Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} validateOnMount>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                     {formik => (
                         <Form onSubmit={formik.handleSubmit}>
                             {
@@ -282,9 +282,9 @@ function ClassList(){
                             value={formik.values.image_url = subjectImage}
                             />
                             <img style={{width: "116px",display: "block",marginTop: "12px"}} src={subjectImage} />
-                            {formik.touched.image_url && formik.errors.image_url ? (
+                            {/* {formik.touched.image_url && formik.errors.image_url ? (
                             <div className="error" style={{color: "red"}}>{formik.errors.image_url}</div>
-                        ) : null}
+                        ) : null} */}
                         </Form.Group>
                         <Modal.Footer>
                             <Button onClick={handleClose} variant="secondary">Close</Button>
