@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import swal from 'sweetalert'
-import { Formik,Field,useFormik,ErrorMessage, } from 'formik';
+import { Formik} from 'formik';
 import * as Yup from 'yup';
 import Versionlisttable from '../../widget/datatble';
 import { useSelector, useDispatch } from 'react-redux';
@@ -116,7 +116,7 @@ function ClassList(){
         name : Yup.string().required('Name is required'),
         code : Yup.string().required('Code is required'),
         priority : Yup.string().required('Priority is required'), 
-        //image_url : Yup.string().required('Subject Image is required'),
+        image_url : Yup.string().required('Subject Image is required'),
     })
 
     const onSubmit = async (values,onSubmitProps) => {
@@ -282,9 +282,9 @@ function ClassList(){
                             value={formik.values.image_url = subjectImage}
                             />
                             <img style={{width: "116px",display: "block",marginTop: "12px"}} src={subjectImage} />
-                            {/* {formik.touched.image_url && formik.errors.image_url ? (
+                            {formik.errors.image_url ? (
                             <div className="error" style={{color: "red"}}>{formik.errors.image_url}</div>
-                        ) : null} */}
+                        ) : null}
                         </Form.Group>
                         <Modal.Footer>
                             <Button onClick={handleClose} variant="secondary">Close</Button>

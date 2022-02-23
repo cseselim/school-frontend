@@ -56,7 +56,10 @@ export const deleteVersion = createAsyncThunk(
 
 export const versionSlice = createSlice({
   name: 'version',
-  initialState: { value: [],editVersion:[]},
+  initialState: { 
+    value: [],
+  editVersion:[]
+},
   reducers:{},
   extraReducers: {
     
