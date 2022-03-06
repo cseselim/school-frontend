@@ -193,9 +193,9 @@ function Question(){
                         </div>                        
                         <div className="row">
                             <div className="col-md-6">
-                                <FieldArray name="options">
-                                    {FieldArrayProps => {
-                                    return <div>
+                                <FieldArray name="options"
+                                render={FieldArrayProps => (
+                                    <div>
                                         {formik.values.options && formik.values.options.length > 0 ? (
                                         formik.values.options.map((option, index) => (
                                             <div key={index}>
@@ -222,8 +222,8 @@ function Question(){
                                         <div>
                                         </div>
                                     </div>
-                                    }}
-                                </FieldArray>
+                                )}
+                                />
                             </div>
                         </div>
 
