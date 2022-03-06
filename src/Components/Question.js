@@ -46,32 +46,10 @@ function Question(){
         mark : Yup.string().required('Mark is required'),
     })
 
-    const [inputFields, setInputFields] = useState(initialValues.options);
-
-//     const addInputField = ()=>{
-//         setInputFields([...inputFields, {
-//             fullName:'',
-//         }])
-//     }
-
-//     const removeInputFields = (index)=>{
-//         const rows = [...inputFields];
-//         rows.splice(index, 1);
-//         setInputFields(rows);
-//    }
-
-//    const handleChange = (index, evnt)=>{
-//     const { name, value } = evnt.target;
-//     const list = [...inputFields];
-//     list[index][name] = value;
-//     setInputFields(list);
-//    }
-
     console.log(initialValues.options);
     const onSubmit = async (values,onSubmitProps) => {
-        
+        alert(values.options);
     }
-
 
     return(
         <>
@@ -212,73 +190,40 @@ function Question(){
                                     ) : null}
                                 </Form.Group>
                             </div>
-                        </div>
-
-                        {/* <div className="msq_option row">
-                            <div className="col-md-6">
-                            {
-                                inputFields.map((data, index)=>{
-                                    const {fullName, emailAddress, salary}= data;
-                                    return(
-                                    <div className="row my-3" key={index}>
-                                        <div className="col">
-                                            <div className="form-group">
-                                            <input type="radio" name="checked[]" id="checked"/>
-                                                <input type="text" onChange={(evnt)=>handleChange(index, evnt)} value={fullName} name="fullName" className="form-control"  placeholder="Full Name" />
-                                            </div>
-                                        </div>
-                            
-                                        <div className="col">
-                                            {(inputFields.length!==1)? <button className="btn btn-outline-danger" onClick={removeInputFields}>x</button>:''}
-                                        </div>
-                                    </div>
-                                    )
-                                })
-                            }
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-12">
-                                <p className="btn btn-outline-success " onClick={addInputField}>Add New</p>
-                                </div>
-                            </div>
-                        </div> */}
-                        
+                        </div>                        
                         <div className="row">
                             <div className="col-md-6">
-                                <FieldArray
-                                    name="formik.values.options"
-                                    render={arrayHelpers => (
-                                    <div>
+                                <FieldArray name="options">
+                                    {FieldArrayProps => {
+                                    return <div>
                                         {formik.values.options && formik.values.options.length > 0 ? (
                                         formik.values.options.map((option, index) => (
                                             <div key={index}>
                                             <Field name={`options.${index}`} />
                                             <button
                                                 type="button"
-                                                onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                                                onClick={() => FieldArrayProps.remove(index)}
                                             >
                                                 -
                                             </button>
                                             <button
                                                 type="button"
-                                                onClick={() => arrayHelpers.insert(index, '')} // insert an empty string at a position
+                                                onClick={() => FieldArrayProps.insert(index, '')}
                                             >
                                                 +
                                             </button>
                                             </div>
                                         ))
                                         ) : (
-                                        <button type="button" onClick={() => arrayHelpers.push('')}>
-                                            {/* show this when user has removed all friends from the list */}
+                                        <button type="button" onClick={() => FieldArrayProps.push('')}>
                                             Add a friend
                                         </button>
                                         )}
                                         <div>
-                                        <button type="submit">Submit</button>
                                         </div>
                                     </div>
-                                    )}
-                                />
+                                    }}
+                                </FieldArray>
                             </div>
                         </div>
 
