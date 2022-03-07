@@ -2,11 +2,12 @@ import React,{useState,useEffect} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import '../../assets/css/Questions/questions.css';
 import { Formik,Field,FieldArray} from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllVersion } from '../state/version/versionSlice';
-import { getAllClasses } from '../state/classes/classesSlice';
+import { getAllVersion } from '../../state/version/versionSlice';
+import { getAllClasses } from '../../state/classes/classesSlice';
 
 
 function Question(){
@@ -22,7 +23,9 @@ function Question(){
         type: '',
         question_level_id: '',
         mark: '',
-        options:['Country A', 'Country B'],
+        options:['', '', '', ''],
+        checked:[],
+        question_explanation: '',
     };
     
     /*============version list for dropdown option=============*/
@@ -44,11 +47,12 @@ function Question(){
         type : Yup.string().required('Question Type is required'),
         question_level_id : Yup.string().required('Question level Id is required'),
         mark : Yup.string().required('Mark is required'),
+        question_explanation: Yup.string().required('Question explanation is required'),
+        checked: Yup.number().required('Required').nullable()
     })
 
-    console.log(initialValues.options);
     const onSubmit = async (values,onSubmitProps) => {
-        alert(values.options);
+        console.log(values);
     }
 
     return(
@@ -198,37 +202,48 @@ function Question(){
                                     <div>
                                         {formik.values.options && formik.values.options.length > 0 ? (
                                         formik.values.options.map((option, index) => (
-                                            <div key={index}>
-                                            <Field name={`options.${index}`} />
-                                            <button
-                                                type="button"
-                                                onClick={() => FieldArrayProps.remove(index)}
-                                            >
-                                                -
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => FieldArrayProps.insert(index, '')}
-                                            >
-                                                +
-                                            </button>
+                                            <div key={index} className="row mb-2">
+                                                <div className="col-1 my-auto text-center">
+                                                    <Field className="rightAnswerRadio" name={`checked.${index}`} {...formik.getFieldProps('checked')}  id={`checked.${index}`} type="radio" />
+                                                </div>
+                                                <div className="col-8">
+                                                    <Field className="form-control" name={`options.${index}`}  placeholder="Option"/>
+                                                </div>
+                                                {formik.values.options.length > 4 ?(
+                                                <div className="col-3 my-auto">
+                                                    <button className="optionRemoveButton" type="button"
+                                                        onClick={() => FieldArrayProps.remove(index)}>
+                                                        -
+                                                    </button>
+                                                </div>
+                                                ):null
+                                                }
                                             </div>
                                         ))
-                                        ) : (
-                                        <button type="button" onClick={() => FieldArrayProps.push('')}>
-                                            Add a friend
+                                        ) : null
+                                        }
+                                        <button className="btn btn-primary mt-3" type="button" onClick={() => FieldArrayProps.push('')}>
+                                            Add Option
                                         </button>
-                                        )}
-                                        <div>
-                                        </div>
                                     </div>
                                 )}
                                 />
                             </div>
                         </div>
 
+                        <Form.Group className="mb-3 mt-4" controlId="formBasicVersion">
+                            <label htmlFor="priority">Question Title:</label>
+                            <textarea className="form-control" id="question_explanation" name="question_explanation" rows="5" cols="30"
+                                placeholder="Question explanation"
+                                {...formik.getFieldProps('question_explanation')}
+                            />
+                            {formik.touched.question_explanation && formik.errors.question_explanation ? (
+                            <div className="error" style={{color: "red"}}>{formik.errors.question_explanation}</div>
+                        ) : null}
+                        </Form.Group>
+
                         <Modal.Footer>
-                            <Button type="submit" variant="primary">Save</Button>
+                            <Button type="submit" className="btn btn-success">Save</Button>
                         </Modal.Footer>
                         </Form>
                     )}
