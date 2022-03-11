@@ -52,7 +52,20 @@ function Question(){
     })
 
     const onSubmit = async (values,onSubmitProps) => {
+        var checked = []
+        for(let x in values.options) {
+            if(x == values.checked){
+                checked.push('1');
+            }else{
+                checked.push('0');
+            }
+        }
+        let obj = {};
+        delete values.checked;
+        //values.push({"checked": checked});
+        values['checked'] = checked;
         console.log(values);
+        
     }
 
     return(
@@ -204,7 +217,7 @@ function Question(){
                                         formik.values.options.map((option, index) => (
                                             <div key={index} className="row mb-2">
                                                 <div className="col-1 my-auto text-center">
-                                                    <Field className="rightAnswerRadio" name={`checked.${index}`} {...formik.getFieldProps('checked')}  id={`checked.${index}`} type="radio" />
+                                                    <input className="rightAnswerRadio" name="checked" {...formik.getFieldProps('checked')} value={index}  id={`checked.${index}`} type="radio" />
                                                 </div>
                                                 <div className="col-8">
                                                     <Field className="form-control" name={`options.${index}`}  placeholder="Option"/>
