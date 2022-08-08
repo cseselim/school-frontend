@@ -2,12 +2,14 @@ import React,{useState,useEffect} from "react";
 import {Button,Row,Col,Modal,Form} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
 import '../../assets/css/Questions/questions.css';
 import { Formik,Field,FieldArray} from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllVersion } from '../../state/version/versionSlice';
 import { getAllClasses } from '../../state/classes/classesSlice';
+import { createQuestion } from "../../state/question/questionSlice";
 
 
 function Question(){
@@ -17,6 +19,8 @@ function Question(){
     /* Conditionally rendering initial values based on CREATE or EDIT */
     let initialValues = {
         id : '',
+        user_id: '1',
+        subject_id: '1',
         version_id: '',
         class_id:'',
         title: '',
@@ -26,6 +30,9 @@ function Question(){
         options:['', '', '', ''],
         checked:[],
         question_explanation: '',
+        is_temp: '0',
+        is_img: '0',
+        img_has:'1'
     };
     
     /*============version list for dropdown option=============*/
@@ -38,39 +45,59 @@ function Question(){
     useEffect(() => {
         dispatch(getAllVersion());
         dispatch(getAllClasses());
-    },[dispatch])
+    },[])
 
     const validationSchema = Yup.object({
-        version_id : Yup.string().required('version is required'),
-        class_id : Yup.string().required('class is required'),
-        title : Yup.string().required('Title is required'),
-        type : Yup.string().required('Question Type is required'),
-        question_level_id : Yup.string().required('Question level Id is required'),
-        mark : Yup.string().required('Mark is required'),
-        question_explanation: Yup.string().required('Question explanation is required'),
-        checked: Yup.number().required('Required').nullable()
+        // version_id : Yup.string().required('version is required'),
+        // class_id : Yup.string().required('class is required'),
+        // title : Yup.string().required('Title is required'),
+        // type : Yup.string().required('Question Type is required'),
+        // question_level_id : Yup.string().required('Question level Id is required'),
+        // mark : Yup.string().required('Mark is required'),
+        // question_explanation: Yup.string().required('Question explanation is required'),
+        // // checked: Yup.number().required('Required').nullable(),
+        // options: Yup.array(
+        //     Yup.object({
+        //         options: Yup.string().required('Option is required'),
+        //     })
+        // )
     })
 
     const onSubmit = async (values,onSubmitProps) => {
-        var checked = []
-        for(let x in values.options) {
-            if(x == values.checked){
-                checked.push('1');
-            }else{
-                checked.push('0');
+        let checked = [];
+
+        if(!values.id){
+            for(let x in values.options) {
+                if(x == values.checked){
+                    checked.push('1');
+                    values['correct_answer'] = (parseInt(x) + 1);
+                }else{
+                    checked.push('0');
+                }
             }
+            values['checked'] = checked;
+            dispatch(createQuestion(values));
+            onSubmitProps.resetForm();
+            toast.success("Question create successfully");
+        }else{
+            for(let x in values.options) {
+                if(x == values.checked){
+                    checked.push('1');
+                    values['correct_answer'] = (parseInt(x) + 1);
+                }else{
+                    checked.push('0');
+                }
+            }
+            values['checked'] = checked;
+            dispatch(createQuestion(values));
+            toast.success("Question update successfully");
         }
-        let obj = {};
-        delete values.checked;
-        //values.push({"checked": checked});
-        values['checked'] = checked;
-        console.log(values);
-        
     }
 
     return(
         <>
           <div className="content_header mb-4">
+          <ToastContainer/>
                 <Row className="Row">
                     <Col xs={6} md={6} className="my-auto">
                         <div className="page_title">
@@ -85,7 +112,6 @@ function Question(){
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
                     {formik => (
                         <Form onSubmit={formik.handleSubmit}>
-
                         <div className="row">
                             <div className="col">
                                 <Form.Group className="mb-3" controlId="formBasicVersion">
@@ -221,6 +247,9 @@ function Question(){
                                                 </div>
                                                 <div className="col-8">
                                                     <Field className="form-control" name={`options.${index}`}  placeholder="Option"/>
+                                                    {formik.touched.options && formik.errors.options ? (
+                                                        <div className="error" style={{color: "red"}}>{formik.errors.options[index].options}</div>
+                                                    ) : null}
                                                 </div>
                                                 {formik.values.options.length > 4 ?(
                                                 <div className="col-3 my-auto">
