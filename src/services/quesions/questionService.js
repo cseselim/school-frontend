@@ -21,8 +21,15 @@ const create = (data) => {
 //   return http.post(`/classes/${id}`, data);
 // };
 
+const fileUpdate = (data) => {
+  var formData = new FormData();
+  formData.append("file_name", data);
+  return http.post('upload', formData);
+};
+
 const questionService = {
   create,
+  fileUpdate,
 };
 
 export default questionService;

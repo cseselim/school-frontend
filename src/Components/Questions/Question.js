@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllVersion } from '../../state/version/versionSlice';
 import { getAllClasses } from '../../state/classes/classesSlice';
-import { createQuestion } from "../../state/question/questionSlice";
+import { createQuestion, questionFileUpload } from "../../state/question/questionSlice";
 
 
 function Question(){
@@ -32,7 +32,7 @@ function Question(){
         question_explanation: '',
         is_temp: '0',
         is_img: '0',
-        img_has:'1'
+        img_has:''
     };
     
     /*============version list for dropdown option=============*/
@@ -48,7 +48,8 @@ function Question(){
     },[])
 
     const validationSchema = Yup.object({
-        // version_id : Yup.string().required('version is required'),
+        version_id : Yup.string().required('version is required'),
+        // img_has : Yup.string().required('Question image is required'),
         // class_id : Yup.string().required('class is required'),
         // title : Yup.string().required('Title is required'),
         // type : Yup.string().required('Question Type is required'),
@@ -61,7 +62,25 @@ function Question(){
         //         options: Yup.string().required('Option is required'),
         //     })
         // )
+        img_has: Yup.mixed()
+            .required()
+            // .test(
+            //     "fileSize",
+            //     "File size too large, max file size is 1 Mb",
+            //     (file) => file && file.size <= 1100000
+            // )
+            // .test(
+            //     "fileType",
+            //     "Incorrect file type",
+            //     (file) =>
+            //     file && ["image/png", "image/jpg", "image/jpeg"].includes(file.type)
+            // ),
     })
+
+    const fileUpload = (files) =>{
+        dispatch(questionFileUpload(files));
+    }
+    var questionImage = useSelector((state) => state.question.imgUrl);
 
     const onSubmit = async (values,onSubmitProps) => {
         let checked = [];
@@ -76,9 +95,10 @@ function Question(){
                 }
             }
             values['checked'] = checked;
-            dispatch(createQuestion(values));
-            onSubmitProps.resetForm();
-            toast.success("Question create successfully");
+            console.log(values);
+            // dispatch(createQuestion(values));
+            // onSubmitProps.resetForm();
+            // toast.success("Question create successfully");
         }else{
             for(let x in values.options) {
                 if(x == values.checked){
@@ -112,6 +132,7 @@ function Question(){
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
                     {formik => (
                         <Form onSubmit={formik.handleSubmit}>
+                            console.log(formik.errors);
                         <div className="row">
                             <div className="col">
                                 <Form.Group className="mb-3" controlId="formBasicVersion">
@@ -172,18 +193,19 @@ function Question(){
                             <div className="col">
                                 <Form.Group controlId="upload" className="mb-3">
                                     <label htmlFor="priority">Subject Thumbnail:</label><br></br>
-                                    <input id="image_urls"type="file"
-                                    // onChange={(event) => {
-                                    //     const files = event.target.files[0];
-                                    //     fileUpload(files);
-                                    //   }}
+                                    <input id="image_urls" type="file"
+                                    onChange={(event) => {
+                                        const files = event.target.files[0];
+                                        fileUpload(files);
+                                        formik.setFieldValue('img_has', questionImage);
+                                      }}
                                     multiple />
-                                    <input id="img_has"name="img_has" type="hidden"
-                                        // value={formik.values.image_url = subjectImage}
-                                    />
-                                    {/* <img style={{width: "116px",display: "block",marginTop: "12px"}} src={subjectImage} /> */}
-                                    {formik.errors.image_url ? (
-                                    <div className="error" style={{color: "red"}}>{formik.errors.image_url}</div>
+                                    {/* <input id="img_has"name="img_has" type="hidden"
+                                        value={formik.values.image_url = questionImage}
+                                    /> */}
+                                    <img style={{width: "116px",display: "block",marginTop: "12px"}} src={questionImage} />
+                                    {formik.errors.img_has ? (
+                                    <div className="error" style={{color: "red"}}>{formik.errors.img_has}</div>
                                 ) : null}
                                 </Form.Group>
                             </div>

@@ -9,15 +9,27 @@ export const createQuestion = createAsyncThunk(
   }
 );
 
+export const questionFileUpload = createAsyncThunk(
+  "question/fileUpload",
+   async (file) => {
+    const fileUrl = await questionService.fileUpdate(file);
+     return fileUrl;
+   }
+);
+
 
 export const questionSlice = createSlice({
   name: 'question',
-  initialState: { value: [],editVersion:[]},
+  initialState: { imgUrl:[] },
   reducers:{},
   extraReducers: {
     
     [createQuestion.fulfilled]: (state, action) => {
       state.value[0].push(action.payload.id);
+    },
+
+    [questionFileUpload.fulfilled]: (state, action) => {
+      state.imgUrl = action.payload.data.url;
     },
     
   },
